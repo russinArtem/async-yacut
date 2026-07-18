@@ -36,24 +36,6 @@
     </div>
   </div>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-          </div>
-          <div class="col-sm">
-            {% for message in messages %}
-              <p class="text-center"><span style="color:red">{{ message }}</span></p>
-            {% endfor %}
-          </div>
-          <div class="col-sm">
-          </div>
-        </div>
-      </div>
-    {% endif %}
-  {% endwith %}
-
   {% if short_link %}
     <div class="container">
       <div class="row">

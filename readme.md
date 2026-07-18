@@ -3,11 +3,11 @@
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone 
+git clone https://github.com/russinArtem/async-yacut.git
 ```
 
 ```
-cd yacut
+cd async-yacut
 ```
 
 Cоздать и активировать виртуальное окружение:
@@ -38,13 +38,14 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Создать в директории проекта файл .env с четыремя переменными окружения:
+Создать в директории проекта файл .env с пятью переменными окружения:
 
 ```
 FLASK_APP=yacut
-FLASK_ENV=development
+FLASK_DEBUG=1
 SECRET_KEY=your_secret_key
-DB=sqlite:///db.sqlite3
+DATABASE_URI=sqlite:///yacut.db
+DISK_TOKEN=your_token
 ```
 
 Создать базу данных и применить миграции:
@@ -58,3 +59,31 @@ flask db upgrade
 ```
 flask run
 ```
+
+---
+
+## Стек технологий
+
+- **Backend:** Python 3.12, Flask 3.0.2;
+- **База данных:** SQLite (SQLAlchemy 2.0.21);
+- **Миграции:** Flask-Migrate (Alembic);
+- **Фронтенд:** HTML, CSS (Bootstrap 5);
+- **Асинхронные запросы:** aiohttp 3.10.5;
+- **Документация API:** OpenAPI 3.0.3;
+- **Тестирование:** pytest, pytest-aiohttp, pytest-asyncio;
+- **Линтинг:** flake8;
+- **Работа с облачными хранилищами:** REST API Яндекс Диска.
+
+---
+
+## Документация API
+
+После запуска сервера доступна по адресу [http://127.0.0.1:5000/redoc/](http://127.0.0.1:5000/redoc/)
+
+## Автор
+
+**Артем Руссин**
+
+GitHub: [russinArtem](https://github.com/russinArtem/)
+
+Email: [russinartem@yandex.ru](mailto:russinartem@yandex.ru)

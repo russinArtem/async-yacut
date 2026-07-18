@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +11,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <title>YaCut - укоротитель ссылок</title>
 </head>
-
 <body>
   <header class="pb-5">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
@@ -34,20 +32,27 @@
       </div>
     </nav>
   </header>
-
   <main>
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+        <div class="container">
+          <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
+              <p class="text-center"><span style="color:red">{{ message }}</span></p>
+            </div>
+            <div class="col-sm">
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endwith %}
     {% block content %}
     {% endblock %}
   </main>
-
   <footer class="fixed-bottom border-top text-center py-3">
     <p>Укоротитель ссылок YaCut</p>
   </footer>
-
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
-
 </html>

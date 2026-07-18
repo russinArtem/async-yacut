@@ -39,7 +39,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Символ экрана</th>
+                <th scope="col">Имя файла</th>
                 <th scope="col">URL</th>
               </tr>
             </thead>
@@ -48,11 +48,7 @@
                 <tr>
                   <td>{{ file.name }}</td>
                   <td>
-                    {% if file.short_link %}
-                      <a href="{{ file.short_link }}" target="_blank">{{ file.short_link }}</a>
-                    {% else %}
-                      Ожидание...
-                    {% endif %}
+                    <a href="{{ file.short_link }}" target="_blank">{{ file.short_link }}</a>
                   </td>
                 </tr>
               {% endfor %}
