@@ -1,31 +1,53 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import MultipleFileField
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import DataRequired, Length, Optional, Regexp
+
+from .constants import ALLOWED_SHORT_PATTERN
+from settings import Config
+
+MAX_ORIGINAL_LENGTH = Config.MAX_ORIGINAL_LENGTH
+MAX_SHORT_LENGTH = Config.MAX_SHORT_LENGTH
+ORIGINAL_LABEL = 'Длинная ссылка'
+REQUIRED_FIELD_ERROR = 'Обязательное поле'
+SHORT_LABEL = 'Ваш вариант короткой ссылки'
+LENGTH_ERROR = 'Длина не более {} символов'
+SHORT_PATTERN_ERROR = 'Используйте только латиницу и цифры'
+SUBMIT_CREATE_LABEL = 'Создать'
+FILES_LABEL = 'Выберите файлы'
+SUBMIT_UPLOAD_LABEL = 'Загрузить'
 
 
 class URLForm(FlaskForm):
-    original_link = StringField(
-        'Длинная ссылка',
-        validators=[DataRequired(message='Обязательное поле')]
+    original_link = URLField(
+        ORIGINAL_LABEL,
+        validators=[
+            DataRequired(message=REQUIRED_FIELD_ERROR),
+            Length(
+                max=MAX_ORIGINAL_LENGTH,
+                message=LENGTH_ERROR.format(MAX_ORIGINAL_LENGTH))
+        ]
     )
     custom_id = StringField(
-        'Ваш вариант короткой ссылки',
+        SHORT_LABEL,
         validators=[
             Optional(),
-            Length(max=16, message='Длина не более 16 символов'),
+            Length(
+                max=MAX_SHORT_LENGTH,
+                message=LENGTH_ERROR.format(MAX_SHORT_LENGTH)
+            ),
             Regexp(
-                r'^[a-zA-Z0-9]+$',
-                message='Используйте только латиницу и цифры'
+                ALLOWED_SHORT_PATTERN,
+                message=SHORT_PATTERN_ERROR
             )
         ]
     )
-    submit = SubmitField('Создать')
+    submit = SubmitField(SUBMIT_CREATE_LABEL)
 
 
 class FileForm(FlaskForm):
     files = MultipleFileField(
-        'Выберите файлы',
-        validators=[DataRequired(message='Выберите файлы')]
+        FILES_LABEL,
+        validators=[DataRequired(message=REQUIRED_FIELD_ERROR)]
     )
-    submit = SubmitField('Загрузить')
+    submit = SubmitField(SUBMIT_UPLOAD_LABEL)

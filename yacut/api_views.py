@@ -1,17 +1,18 @@
-from flask import abort, jsonify, render_template, request, send_from_directory
+from flask import jsonify, render_template, request, send_from_directory
 
 from . import app
 from .constants import (
     BAD_REQUEST,
-    BASE_SHORT_URL,
     CREATED,
     EMPTY_BODY_ERROR,
+    INVALID_SHORT_ERROR,
     NOT_FOUND,
     OK,
     SHORT_EXISTS_ERROR,
     SHORT_NOT_FOUND_ERROR,
     URL_REQUIRED_ERROR,
 )
+from .error_handlers import APIError
 from .models import URLMap
 
 
@@ -19,24 +20,30 @@ from .models import URLMap
 def create_short_link_api():
     data = request.get_json(silent=True)
     if data is None:
-        abort(BAD_REQUEST, EMPTY_BODY_ERROR)
+        raise APIError(EMPTY_BODY_ERROR, BAD_REQUEST)
     url = data.get('url')
     if not url:
-        abort(BAD_REQUEST, URL_REQUIRED_ERROR)
+        raise APIError(URL_REQUIRED_ERROR, BAD_REQUEST)
     try:
-        url_map = URLMap.create(url, data.get('short'))
-    except Exception:
-        abort(BAD_REQUEST, SHORT_EXISTS_ERROR)
+        url_map = URLMap.create(url, data.get('custom_id'))
+    except ValueError as error:
+        error_message = str(error)
+        if error_message == INVALID_SHORT_ERROR:
+            raise APIError(INVALID_SHORT_ERROR, BAD_REQUEST)
+        elif error_message == SHORT_EXISTS_ERROR:
+            raise APIError(SHORT_EXISTS_ERROR, BAD_REQUEST)
+        else:
+            raise APIError(error_message, BAD_REQUEST)
     return jsonify(
-        {'url': url, 'short': BASE_SHORT_URL.format(url_map.short)}
+        {'url': url, 'short_link': url_map.get_short_url()}
     ), CREATED
 
 
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
-def get_original_link(short):
-    url_map = URLMap.get_by_short(short)
+def get_original_link(short_id):
+    url_map = URLMap.get_by_short(short_id)
     if not url_map:
-        abort(NOT_FOUND, SHORT_NOT_FOUND_ERROR)
+        raise APIError(SHORT_NOT_FOUND_ERROR, NOT_FOUND)
     return jsonify({'url': url_map.original}), OK
 
 
