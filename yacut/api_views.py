@@ -1,11 +1,10 @@
-from flask import jsonify, request, send_from_directory
+from flask import jsonify, request
 
 from . import app
 from .constants import (
     CREATED,
     NOT_FOUND,
-    OK,
-    OPENAPI_DIR,
+    OK
 )
 from .error_handlers import APIError
 from .models import URLMap
@@ -24,8 +23,8 @@ def create_short_link_api():
         raise APIError(URL_REQUIRED_ERROR)
     url = data['url']
     try:
-        url_map = URLMap.create(url, data.get('custom_id'), from_api=True)
-    except Exception as error:
+        url_map = URLMap.create(url, data.get('custom_id'), validate=True)
+    except (ValueError, RuntimeError) as error:
         raise APIError(str(error))
     return jsonify(
         {'url': url, 'short_link': url_map.get_short_url()}
@@ -34,11 +33,6 @@ def create_short_link_api():
 
 @app.route('/api/id/<string:short>/', methods=['GET'])
 def get_original_link(short):
-    if not (url_map := URLMap.get_by_short(short)):
+    if not (url_map := URLMap.get(short)):
         raise APIError(SHORT_NOT_FOUND_ERROR, NOT_FOUND)
     return jsonify({'url': url_map.original}), OK
-
-
-@app.route('/redoc')
-def openapi_spec():
-    return send_from_directory(OPENAPI_DIR, 'openapi.yml')

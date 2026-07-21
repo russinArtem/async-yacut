@@ -3,15 +3,12 @@ import asyncio
 
 import aiohttp
 
-from . import app
+from settings import Config
 
-BASE_URL = (
-    f'{app.config["API_HOST"]}'
-    f'{app.config["API_VERSION"]}/disk/resources'
-)
+BASE_URL = f'{Config.API_HOST}{Config.API_VERSION}/disk/resources'
 UPLOAD_URL = f'{BASE_URL}/upload'
 DOWNLOAD_URL = f'{BASE_URL}/download'
-AUTH_HEADERS = {'Authorization': f'OAuth {app.config["DISK_TOKEN"]}'}
+AUTH_HEADERS = {'Authorization': f'OAuth {Config.DISK_TOKEN}'}
 UPLOAD_ERROR_TEMPLATE = 'Не удалось загрузить файл {}'
 
 
@@ -28,10 +25,8 @@ async def upload_file_to_disk(file_data, filename):
         async with session.put(
             await _make_request(
                 UPLOAD_URL,
-                {
-                    'path': f'{app.config["YANDEX_DISK_FOLDER"]}{filename}',
-                    'overwrite': 'True'
-                }
+                {'path': f'app:/{Config.DISK_FOLDER}/{filename}',  # noqa: E231
+                    'overwrite': 'True'}
             ),
             data=file_data
         ) as response:
