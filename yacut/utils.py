@@ -15,11 +15,7 @@ AUTH_HEADERS = {'Authorization': f'OAuth {app.config["DISK_TOKEN"]}'}
 UPLOAD_ERROR_TEMPLATE = 'Не удалось загрузить файл {}'
 
 
-async def _make_request(endpoint, params):
-    if endpoint == 'upload':
-        url = UPLOAD_URL
-    else:
-        url = DOWNLOAD_URL
+async def _make_request(url, params):
     async with aiohttp.ClientSession() as session:
         async with session.get(
             url, headers=AUTH_HEADERS, params=params
@@ -31,8 +27,11 @@ async def upload_file_to_disk(file_data, filename):
     async with aiohttp.ClientSession() as session:
         async with session.put(
             await _make_request(
-                'upload',
-                {'path': f'app:/{filename}', 'overwrite': 'True'}  # noqa: E231
+                UPLOAD_URL,
+                {
+                    'path': f'{app.config["YANDEX_DISK_FOLDER"]}{filename}',
+                    'overwrite': 'True'
+                }
             ),
             data=file_data
         ) as response:
@@ -43,12 +42,11 @@ async def upload_file_to_disk(file_data, filename):
 
 def upload_all_files(files):
     async def _upload_all():
-        results = []
-        for file in files:
-            filename = file.filename
-            location = await upload_file_to_disk(file.read(), filename)
-            if not location:
-                raise RuntimeError(UPLOAD_ERROR_TEMPLATE.format(filename))
-            results.append(await _make_request('download', {'path': location}))
-        return results
+        return await asyncio.gather(*[
+            _make_request(DOWNLOAD_URL, {'path': location})
+            for location in await asyncio.gather(*[
+                upload_file_to_disk(file.read(), file.filename)
+                for file in files
+            ])
+        ])
     return asyncio.run(_upload_all())

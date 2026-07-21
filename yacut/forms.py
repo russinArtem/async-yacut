@@ -3,15 +3,16 @@ from flask_wtf.file import MultipleFileField
 from wtforms import StringField, SubmitField, URLField
 from wtforms.validators import DataRequired, Length, Optional, Regexp
 
-from .constants import ALLOWED_SHORT_PATTERN
-from settings import Config
+from .constants import (
+    ALLOWED_SHORT_PATTERN,
+    LENGTH_ERROR,
+    MAX_ORIGINAL_LENGTH,
+    MAX_SHORT_LENGTH
+)
 
-MAX_ORIGINAL_LENGTH = Config.MAX_ORIGINAL_LENGTH
-MAX_SHORT_LENGTH = Config.MAX_SHORT_LENGTH
 ORIGINAL_LABEL = 'Длинная ссылка'
 REQUIRED_FIELD_ERROR = 'Обязательное поле'
 SHORT_LABEL = 'Ваш вариант короткой ссылки'
-LENGTH_ERROR = 'Длина не более {} символов'
 SHORT_PATTERN_ERROR = 'Используйте только латиницу и цифры'
 SUBMIT_CREATE_LABEL = 'Создать'
 FILES_LABEL = 'Выберите файлы'

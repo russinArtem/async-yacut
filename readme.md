@@ -38,15 +38,7 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Создать в директории проекта файл .env с пятью переменными окружения:
-
-```
-FLASK_APP=yacut
-FLASK_DEBUG=1
-SECRET_KEY=your_secret_key
-DATABASE_URI=sqlite:///yacut.db
-DISK_TOKEN=your_token
-```
+В корне проекта создать файл `.env` и указать в нем переменные из файла `.env.example`. В `.env` присвойте переменным свои актуальные значения.
 
 Создать базу данных и применить миграции:
 

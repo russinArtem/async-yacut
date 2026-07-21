@@ -7,7 +7,4 @@ class Config:
     DISK_TOKEN = os.getenv('DISK_TOKEN')
     API_HOST = 'https://cloud-api.yandex.net/'
     API_VERSION = 'v1'
-    MAX_ORIGINAL_LENGTH = 2048
-    MAX_SHORT_LENGTH = 16
-    SHORT_LENGTH = 6
-    MAX_SHORT_GENERATION_ATTEMPTS = 10
+    YANDEX_DISK_FOLDER = 'app:/yacut/'

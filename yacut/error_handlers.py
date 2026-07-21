@@ -1,11 +1,11 @@
 from flask import jsonify, render_template
 
 from . import app, db
-from .constants import NOT_FOUND, INTERNAL_SERVER_ERROR
+from .constants import BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR
 
 
 class APIError(Exception):
-    def __init__(self, message, status_code):
+    def __init__(self, message, status_code=BAD_REQUEST):
         self.message = message
         self.status_code = status_code
 
