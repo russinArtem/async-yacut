@@ -72,6 +72,8 @@ flask run
 
 После запуска сервера доступна по адресу [http://127.0.0.1:5000/redoc/](http://127.0.0.1:5000/redoc/)
 
+---
+
 ## Автор
 
 **Артем Руссин**
@@ -79,3 +81,7 @@ flask run
 GitHub: [russinArtem](https://github.com/russinArtem/)
 
 Email: [russinartem@yandex.ru](mailto:russinartem@yandex.ru)
+
+## Лицензия
+
+Проект выполнен в рамках учебного курса [Яндекс.Практикум](https://practicum.yandex.ru/).
